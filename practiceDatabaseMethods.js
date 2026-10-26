@@ -1,76 +1,47 @@
 const mongoose = require('mongoose')
-const Recipe = require('./models/Recipe')
+require('dotenv').config()
+const connectToDB = require('./db')
 
 
-async function connectToDB() { //connection to the database
-    try {
-        await mongoose.connect('mongodb://localhost:27017/recipes')
-        console.log('Connected to database!')
-    }
-    catch (error) {
-        console.log("Connection failed. ", error)
-    }
-}
+// "get the 5 functions from recipeUtils.js"
+const {
+    createRecipe,
+    getAllRecipes,
+    getRecipeById,
+    updateRecipe,
+    deleteRecipe
+} = require('./recipeUtils')
+
 connectToDB() // connect to database
 
 
-// 3. createRecipe(newRecipe)
-async function createRecipe(newRecipe) {
-    try {
-        const createdRecipe = await Recipe.create(newRecipe)
-        console.log(createdRecipe)
-    }
-    catch (error) {
-        console.log('Failed to create recipe.')
-    }
-}
-//createRecipe(newRecipe)
-
-
-// 4. getAllRecipes()
-async function getAllRecipes() {
-    const allRecipes = await Recipe.find()
-    console.log(allRecipes)
-}
-
-
-// 5. getRecipeById(id)
-async function getRecipeById(id) {
-    const foundRecipe = await Recipe.findById(id)
-
-    if (foundRecipe) {
-        console.log(foundRecipe)
-    } else {
-        console.log('No recipe with this ID exists.')
-    }
-}
-
-
-// 6. updateRecipe(recipeId, newRecipeData)
-async function updateRecipe(recipeId, newRecipeData) {
-    const updatedRecipe = await Recipe.findByIdAndUpdate(recipeId, newRecipeData, { new: true })
-    console.log(updatedRecipe)
-}
-
-
-
-// 7. deleteRecipe(recipeId)
-async function deleteRecipe(recipeId) {
-    await Recipe.findByIdAndDelete(recipeId)
-    console.log('Recipe successfully deleted.')
-}
-
-
-
 const newRecipe = {
-    name: "cake",
+    name: "Um Ali",
     instructions: "bake at 180C",
-    prepTime: 120,
+    prepTime: 80,
     difficulty: "Medium"
 }
 
-//createRecipe(newRecipe)
+createRecipe(newRecipe)
 //getAllRecipes()
 //getRecipeById('6adf3a12ef14548b9f39ae7e')
 //updateRecipe('6adf3a12ef14548b9f39ae7e', { prepTime: 360 })
 //deleteRecipe('6adf3a45e11d19d1bdbeb05a')
+
+
+// test
+/*
+getRecipeById('abc')   
+updateRecipe('abc', { prepTime: 1 }) 
+deleteRecipe('abc') 
+*/
+
+/* 
+test
+updateRecipe('6adf3cc4e9a5cf99bb6ec1e5', { prepTime: 1 })   // fails: prepTime below min 5
+updateRecipe('6adf464c6c05ca6cad671b5e', { prepTime: 90 })  // works: prints the updated recipe
+deleteRecipe('6adf464c6c05ca6cad671b5e')                    // prints: Recipe successfully deleted.
+deleteRecipe('6adf464c6c05ca6cad671b5e')                    // run again: No recipe with this ID exists.  
+
+
+*/
